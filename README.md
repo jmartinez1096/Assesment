@@ -1,6 +1,6 @@
 # Assesment
 
-#Para instalar el proyector 
+Para instalar el proyecto 
 
 Npm install 
 
