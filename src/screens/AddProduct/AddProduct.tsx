@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {Text} from 'react-native';
 import {
@@ -7,32 +7,76 @@ import {
   DatePickerForm,
   Header,
   InputForm,
+  InputPreview,
 } from '../../components';
 import {TitleWrapper, ViewProductDetail, Wrapper, ViewButtons} from './Styles';
 import {yupResolver} from '@hookform/resolvers/yup';
 import schema from './schema';
+import dayjs from 'dayjs';
+import {useProducts} from '../../hooks';
+import {useNavigation} from '@react-navigation/native';
 
 type FormValues = {
   id: string;
   name: string;
   description: string;
   logo: string;
-  dateInit: string;
-  dateEnd: string;
+  dateInit: Date;
+  dateEnd: Date;
 };
 
-export const AddProduct = () => {
+export const AddProduct = ({route, props}) => {
+  const {productObject, edit} = route.params;
+  const {succesCreate, isLoading, addProduct} = useProducts();
+  const navigation = useNavigation();
+
   const {
     control,
     formState: {errors},
     handleSubmit,
+    getValues,
+    setValue,
+    reset,
   } = useForm<FormValues>({
     mode: 'onTouched',
     resolver: yupResolver(schema()),
+    defaultValues: {
+      id: edit ? productObject?.id : undefined,
+      name: edit ? productObject?.name : undefined,
+      description: edit ? productObject?.description : undefined,
+      logo: edit ? productObject?.logo : undefined,
+      dateInit: edit ? new Date(productObject?.date_release) : undefined,
+      dateEnd: edit ? new Date(productObject?.date_revision) : undefined,
+    },
   });
 
   const onSubmit = (data: FormValues) => {
-    console.log('email: ', data.name);
+    addProduct(
+      {
+        date_release: dayjs(new Date(data.dateInit)).format(
+          'YYYY-MM-DDTHH:mm:ssZ',
+        ),
+        date_revision: dayjs(new Date(data.dateEnd)).format(
+          'YYYY-MM-DDTHH:mm:ssZ',
+        ),
+        description: data.description,
+        id: data.id,
+        logo: data.logo,
+        name: data.name,
+      },
+      edit,
+    );
+  };
+  useEffect(() => {
+    if (succesCreate) {
+      navigation.goBack();
+    }
+  }, [succesCreate, isLoading]);
+
+  const changueDateEnd = async (date: Date) => {
+    await setValue('dateInit', new Date(date));
+    const result = dayjs(date).add(1, 'year').toDate();
+    setValue('dateEnd', result);
   };
   return (
     <Container>
@@ -47,12 +91,21 @@ export const AddProduct = () => {
             }}>{`Formulario de Registro`}</Text>
         </TitleWrapper>
         <ViewProductDetail>
-          <InputForm
-            control={control}
-            label={'ID'}
-            name="id"
-            errorMessage={errors?.id?.message?.toString()}
-          />
+          {edit ? (
+            <InputPreview
+              label="Fecha de revisión"
+              value={getValues('id')}
+              disabled={true}
+            />
+          ) : (
+            <InputForm
+              control={control}
+              label={'ID'}
+              name="id"
+              errorMessage={errors?.id?.message?.toString()}
+            />
+          )}
+
           <InputForm
             control={control}
             label={'Nombre'}
@@ -83,6 +136,19 @@ export const AddProduct = () => {
             theme={'light'}
             minimumDate={new Date()}
             is24hourSource={'locale'}
+            onConfirm={date => changueDateEnd(date)}
+          />
+
+          <InputPreview
+            label="Fecha de revisión"
+            value={
+              edit
+                ? dayjs(getValues('dateEnd')).format('DD/MM/YYYY')
+                : getValues('dateEnd')
+                ? dayjs(getValues('dateEnd')).format('DD/MM/YYYY')
+                : ''
+            }
+            disabled={true}
           />
         </ViewProductDetail>
         <ViewButtons>
@@ -98,7 +164,21 @@ export const AddProduct = () => {
             textColor={'#293e6d'}
             background={'#fff'}
             marginTop={24}
-            onPress={() => console.log('agregar')}
+            onPress={() =>
+              reset(formValues => ({
+                ...formValues,
+                id: edit ? productObject?.id : undefined,
+                name: edit ? productObject?.name : undefined,
+                description: edit ? productObject?.description : undefined,
+                logo: edit ? productObject?.logo : undefined,
+                dateInit: edit
+                  ? new Date(productObject?.date_release)
+                  : undefined,
+                dateEnd: edit
+                  ? new Date(productObject?.date_revision)
+                  : undefined,
+              }))
+            }
           />
         </ViewButtons>
       </Wrapper>

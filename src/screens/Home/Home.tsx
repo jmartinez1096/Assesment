@@ -15,17 +15,6 @@ export const Home = (props: {navigation: any}) => {
     getProducts();
   }, [isFocused]);
 
-  const productData = [
-    {
-      name: 'tarjeta credito',
-      id: '2cxs32sw',
-    },
-    {
-      name: 'tarjeta debito',
-      id: '22cxs322sw',
-    },
-  ];
-
   const navigateToAddProduct = () => {
     navigation.navigate('AddProduct', {
       edit: false,
@@ -37,7 +26,7 @@ export const Home = (props: {navigation: any}) => {
       <Header />
       <Wrapper>
         <ProductsList
-          productsData={productData}
+          productsData={products}
           navigation={navigation}
           isLoading={isLoading}
           getProductList={() => getProducts()}

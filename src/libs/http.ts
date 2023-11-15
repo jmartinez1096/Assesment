@@ -27,7 +27,7 @@ export class Http {
       async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
         config.headers = {
           ...config.headers,
-          authorId: `jgm1096`,
+          authorId: `02`,
         };
         return config;
       },

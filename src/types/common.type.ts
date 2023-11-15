@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { TextInputProps } from 'react-native';
+import {ReactNode} from 'react';
+import {TextInputProps} from 'react-native';
 
 export type InputProps = TextInputProps & {
   leftIcon?: ReactNode;
@@ -29,4 +29,8 @@ export type TProducts = {
 export type TProductsView = {
   id: string;
   name: string;
+};
+
+export type GenericResponse = {
+  message: string;
 };

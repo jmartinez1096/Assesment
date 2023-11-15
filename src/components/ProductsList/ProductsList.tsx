@@ -6,11 +6,11 @@ import {useIsFocused} from '@react-navigation/native';
 import {InputForm} from '../Input';
 import {useForm} from 'react-hook-form';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {TProductsView} from '../../types';
+import {TProducts} from '../../types';
 import {RefreshControl} from 'react-native';
 
 type Props = {
-  productsData?: Array<TProductsView>;
+  productsData?: Array<TProducts>;
   navigation?: unknown;
   isLoading?: boolean;
   getProductList?: () => void;
@@ -23,8 +23,8 @@ type FormValues = {
 export const ProductsList: FC<Props> = props => {
   const {productsData, navigation, isLoading, getProductList} = props;
 
-  const [products, setDataProducts] = useState<Array<TProductsView>>([]);
-  const [productsCopy, setDataProductsCopy] = useState<Array<TProductsView>>(
+  const [products, setDataProducts] = useState<Array<TProducts>>([]);
+  const [productsCopy, setDataProductsCopy] = useState<Array<TProducts>>(
     [],
   );
 
@@ -78,6 +78,7 @@ export const ProductsList: FC<Props> = props => {
             key={item.id}
             name={item.name}
             id={item.id}
+            productObject={item}
             navigation={navigation}
           />
         )}

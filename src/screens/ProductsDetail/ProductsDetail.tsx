@@ -7,23 +7,44 @@ import {
   ProductsRowLogo,
   ProductsRowText,
 } from '../../components';
-import {TitleWrapper, ViewProductDetail, Wrapper, ViewButtons, WrapperModal} from './Styles';
+import {
+  TitleWrapper,
+  ViewProductDetail,
+  Wrapper,
+  ViewButtons,
+  WrapperModal,
+} from './Styles';
 
 import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 import BottomSheet from '@gorhom/bottom-sheet';
+import dayjs from 'dayjs';
+import {useProducts} from '../../hooks';
 
-export const ProductsDetail = (props: {navigation: any}) => {
-  const {navigation} = props;
+export const ProductsDetail = ({route, navigation}) => {
+  const {productObject} = route.params;
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const {succesDelete, isLoading, deleteProduct} = useProducts();
+
   const [modalState, setModalState] = useState(-1);
   const handleSheetChanges = useCallback((index: number) => {
     setModalState(index);
   }, []);
 
-  useEffect;
+  const navigateToEdit = () => {
+    navigation.navigate('AddProduct', {
+      edit: true,
+      productObject: productObject,
+    });
+  };
+
+  useEffect(() => {
+    if (succesDelete) {
+      navigation.goBack();
+    }
+  }, [succesDelete, isLoading]);
   return (
     <Container>
       <BottomSheetModalProvider>
@@ -35,7 +56,7 @@ export const ProductsDetail = (props: {navigation: any}) => {
                 fontWeight: 'bold',
                 fontSize: 20,
                 color: '#000',
-              }}>{`ID: 27cx32D`}</Text>
+              }}>{`ID: ${productObject?.id}`}</Text>
             <Text
               style={{
                 fontSize: 16,
@@ -43,17 +64,21 @@ export const ProductsDetail = (props: {navigation: any}) => {
               }}>{`Información extra`}</Text>
           </TitleWrapper>
           <ViewProductDetail>
-            <ProductsRowText title={'Nombre'} text={'mundo'} />
-            <ProductsRowText title={'Descripcón'} text={'mundo'} />
-            <ProductsRowLogo
-              title={'Logo'}
-              image={
-                'https://www.visa.com.ec/dam/VCOM/regional/lac/SPA/Default/Pay%20With%20Visa/Tarjetas/visa-signature-400x225.jpg'
-              }
+            <ProductsRowText title={'Nombre'} text={productObject?.name} />
+            <ProductsRowText
+              title={'Descripcón'}
+              text={productObject?.description}
             />
+            <ProductsRowLogo title={'Logo'} image={productObject?.logo} />
 
-            <ProductsRowText title={'Fecha Liberacón'} text={'mundo'} />
-            <ProductsRowText title={'Fecha Revisión'} text={'mundo'} />
+            <ProductsRowText
+              title={'Fecha Liberacón'}
+              text={dayjs(productObject?.date_release).format('DD/MM/YYYY')}
+            />
+            <ProductsRowText
+              title={'Fecha Revisión'}
+              text={dayjs(productObject?.date_revision).format('DD/MM/YYYY')}
+            />
           </ViewProductDetail>
           <ViewButtons>
             <Button
@@ -61,7 +86,7 @@ export const ProductsDetail = (props: {navigation: any}) => {
               textColor={'#293e6d'}
               background={'#fff'}
               marginTop={24}
-              onPress={() => console.log('agregar')}
+              onPress={() => navigateToEdit()}
             />
 
             <Button
@@ -88,13 +113,13 @@ export const ProductsDetail = (props: {navigation: any}) => {
                     color: '#000',
                     fontSize: 16,
                     marginTop: 20,
-                  }}>{`¿Estás seguro de eliminar el producto Mundo?`}</Text>
+                  }}>{`¿Estás seguro de eliminar el producto ${productObject?.name}?`}</Text>
                 <ViewButtons>
                   <Button
                     primaryText={'Confirmar'}
                     textColor={'#293e6d'}
                     marginTop={24}
-                    onPress={() => console.log('agregar')}
+                    onPress={() => deleteProduct(productObject?.id)}
                   />
 
                   <Button

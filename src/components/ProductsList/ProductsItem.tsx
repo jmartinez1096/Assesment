@@ -8,18 +8,22 @@ import {
   TextContainer,
   ViewSeparator,
 } from './Styles';
+import { TProducts } from '../../types';
+
 type Props = {
-  name: string;
+  productObject: TProducts;
   id: string;
   navigation: unknown;
+  name: string
 };
 
 export const ProductsItem: FC<Props> = props => {
-  const {name, id, navigation} = props;
+  const {name, id, navigation, productObject} = props;
 
   const navigateToDetail = (id: string) => {
     navigation.navigate('ProductsDetail', {
       id: id,
+      productObject: productObject
     });
   };
   return (

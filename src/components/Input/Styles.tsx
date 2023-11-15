@@ -38,9 +38,7 @@ export const Label = styled.Text<TLabel>`
   padding-left: ${({withIcon}): string => (withIcon ? '22px' : '6px')};
   width: 100%;
   background-color: ${({disabled}): string =>
-    disabled ? '#a7a7a7' : 'transparent'};
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
+    disabled ? '#a7a7a7cc' : 'transparent'};
 `;
 
 export const IconWrapper = styled.View`
@@ -70,12 +68,8 @@ export const PreviewContainer = styled.View<TLabel>`
   height: 50px;
   margin-top: 20px;
   padding-bottom: 6px;
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  border-bottom-left-radius: 8px;
   background-color: ${({disabled}): string =>
-    disabled ? '#a7a7a7' : 'transparent'};
+    disabled ? '#a7a7a7cc' : 'transparent'};
 `;
 
 export const ViewContainer = styled.View<TLabel>`

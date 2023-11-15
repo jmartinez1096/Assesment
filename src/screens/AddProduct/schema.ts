@@ -1,25 +1,25 @@
 import * as yup from 'yup';
 
 const required = 'Campo requerido'
-const max =  'El campo debe ser máximo de {{ max }} caracteres';
-const min =  'El campo debe ser minimo de {{ max }} caracteres';
+const maxMessage = (max: number) => `Debe ser máximo de ${max} caracteres`;
+const minMessage = (min: number) => `Debe ser minimo de ${min} caracteres`;
 export default () => {
   return yup.object().shape({
       id: yup
       .string()
       .required(required)
-      .max(10, max)
-      .min(3, min),
+      .max(10, maxMessage(10))
+      .min(3, minMessage(3)),
       name: yup
       .string()
       .required(required)
-      .min(5, min)
-      .max(10, max),
+      .min(5, minMessage(5))
+      .max(10, maxMessage(10)),
       description: yup
       .string()
       .required(required)
-      .min(10, min)
-      .max(200, max),
+      .min(10, minMessage(10))
+      .max(200, maxMessage(200)),
       logo: yup
       .string()
       .required(required),

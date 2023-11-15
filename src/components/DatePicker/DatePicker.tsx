@@ -3,8 +3,6 @@ import React, {FC, useState} from 'react';
 import {Text} from 'react-native';
 import RNDatePicker, {DatePickerProps} from 'react-native-date-picker';
 
-import Feather from 'react-native-vector-icons/Feather';
-import {useTheme} from 'styled-components';
 import {Row} from '../Grid';
 import {DateContainer, Label} from './Styles';
 
@@ -62,6 +60,7 @@ export const DatePicker: FC<Props> = props => {
               color: '#E61d1d',
               textAlign: 'left',
               width: '100%',
+              marginTop: 5,
             }}>
             {errorMessage}
           </Text>

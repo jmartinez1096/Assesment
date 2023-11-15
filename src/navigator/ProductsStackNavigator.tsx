@@ -1,13 +1,16 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import {ProductsDetail, Home, AddProduct} from '../screens';
+import {TProducts} from '../types';
 type AppNavigationParams = {
   Products: undefined;
   ProductsDetail: {
-    id?: string;
+    id: string;
+    productObject?: TProducts;
   };
   AddProduct: {
     id?: string;
     edit: boolean;
+    productObject?: TProducts;
   };
 };
 
